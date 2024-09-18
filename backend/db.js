@@ -11,5 +11,6 @@ const dbConnect= async()=>{
         console.log(colors.red(error));
     }
 }
+// jjkbkjbhv
 
 module.exports = dbConnect;

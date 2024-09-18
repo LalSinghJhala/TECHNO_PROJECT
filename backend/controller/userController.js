@@ -1,32 +1,29 @@
-const User = require('../models/userModel')
+const { isDecimal } = require('validator');
+const User =require('../model/UserModel')
 
-exports.signup = async(req , res ) => {
-   try {
-    const {email} = req.body;
-    const isExisting = await User.
-    findOne({email});
-    console.log(isExisting);
-    // check if user already exist 
-    if(isExisting) {
-       return res.status(400).send("pehle se hi user hai tu");
-    }
 
-    const user = await User.create(req.body)
-    if(user) {
-        res.status(201) .json ({
-            message : "User Registered Succesfully ",
-            data : user
-        })
+exports.signUp = async(req,res,next)=>{
+    try {
+        const {email}=req.body;
+        const isExistingUser = await User.findOne({email});
+        console.log(isExistingUser);
+        // Checking if user already exists
+        if(isExistingUser){
+        //    return res.status(404).send("Pehle se hi user hai tu");
+        throw new Error("User Already exists")
+
+        }
+
+        // 
+        const user = await User.create(req.body)
+        if(user){
+            res.status(201).json({
+                message:"User Registered Successfully",
+                data:user
+            })
+        }
+    } catch (error) {
+        // return res.status(400).send(error.message)
+        next(error);
     }
-   }catch(error) {
-        return res.status(400).send(error.message);
-   }
 }
-
-
-// {
-//     name : 'lalsingh',
-//     email : 'lalsinghjhala1999@gmail.com',
-//     phone : '',
-//     password : 'ekfsadsgsd'
-// }
